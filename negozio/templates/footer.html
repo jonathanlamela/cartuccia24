@@ -1,0 +1,23 @@
+<footer class="row">
+<div class="col-md-12" style="padding-left: 5%;padding-right: 2%;padding-bottom:5%;background-color: #333333">
+    <div class="col-md-2" style="padding-top: 2%;text-align: center;line-height: 3em">
+        <ul style="list-style: none">
+            <li>
+                <h4 style="color: white;">INFORMAZIONI SU DI NOI</h4>
+            </li>
+            {% for pagina in pages %}
+                <li style="color: white;list-style: none"><a href="/s/{{ pagina.slug }}/">{{ pagina.titolo|upper }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-2" style="padding-top: 2%;text-align: center">
+        <ul style="list-style: none;text-align: center;line-height: 3em">
+            <li><h4 style="color: white;">PAGAMENTI ACCETTATI</h4></li>
+            <li><img src="http://vignette1.wikia.nocookie.net/logopedia/images/6/61/PayPal_logo_new.png/revision/latest?cb=20121110085059" width="50%" height="auto"/></li>
+            <li><img src="https://upload.wikimedia.org/wikipedia/it/b/bc/Logo_Postepay.png" width="50%" height="auto"/></li>
+            <li><img src="https://s3-eu-west-1.amazonaws.com/fieldfanatics.com/frontend-web/img/visa-master.png" width="50%" height="auto"></li>
+            <li style="color: white">BONIFICO BANCARIO</li>
+        </ul>
+    </div>
+</div>
+</footer>

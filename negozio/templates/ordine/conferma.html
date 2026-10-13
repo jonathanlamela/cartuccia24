@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}Ordine {{ ordine.codice }}{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Il tuo ordine è stato ricevuto</h2>
+        </div>
+
+        <div class="panel-body">
+            <p>Il tuo ordine è stato inserito nel nostro sistema e non verrà evaso fino a quando non ci risulterà pagato. L'ordine verrà eliminato se il pagamento non verrà effettuato entro 72 ore.</p>
+
+            <p>
+            {% if ordine.stato.pagato %}
+            <button class="btn btn-success">Pagato</button>
+                {% if ordine.stato_id == 4 %}
+                <button class="btn btn-default">Spedito</button>
+                {% elif  ordine.stato.pagato == False %}
+                <button class="btn btn-danger">Non pagato</button>
+                {% elif ordine.stato.pagato and ordine_stato_id != 4 %}
+                <button class="btn btn-warning">In spedizione</button>
+                {% endif %}
+            </p>
+            {% else %}
+            <p><button class="btn btn-danger">Non pagato</button></p>
+            <p>Il totale da pagare è {{ ordine.totale_da_pagare }} €.</p>
+
+            <b>Info pagamento</b>
+            {% if ordine.tipo_pagamento_id == 1 %}
+            <p>Hai scelto di pagare con PayPal. In questo modo il tuo ordine verrà evaso in tempi brevi. Per completare il pagamento clicca sul tasto PAGA ORA.</p>
+            <form method="POST" action="https://www.sandbox.paypal.com/cgi-bin/webscr " class="form-horizontal">
+                {{ form_paypal.as_p }}
+                <div class="control-group" style="    padding-top: 2%;
+    padding-bottom: 2%;">
+                    <input type="submit" value="PAGA ORA" class="btn btn-success">
+                </div>
+            </form>
+            {% elif ordine.tipo_pagamento_id == 2 %}
+            <p>Hai scelto di pagare tramite Bonifico bancario. Ecco i dati per il pagamento :</p>
+            <p>{{ ordine.pagamento.istruzioni }}</p>
+            {% elif ordine.tipo_pagamento_id == 3 %}
+            <p>Hai scelto di pagare tramite Postepay. Ecco i dati per il pagamento :</p>
+            <p>{{ ordine.pagamento.istruzioni }}</p>
+            {% endif %}
+
+            {% endif %}
+
+
+            <p><b>Ecco un riepilogo del tuo ordine</b></p>
+            <table class="table table-responsive">
+                <thead>
+                <th>Codice</th>
+                <th>Prodotto</th>
+                <th>Qta</th>
+                <th>Prezzo unitario</th>
+            </thead>
+            <tbody>
+                {% for riga in ordine.righe_ordine %}
+                <tr>
+                    <td>{{ riga.prodotto.mpn }}</td>
+                    <td>{{ riga.prodotto.nome }}</td>
+                    <td>{{ riga.qta }}</td>
+                    <td>{{ riga.prezzo_unitario }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            <p><b>Spedizione </b></p>
+            <p>Spese spedizione : {{ ordine.spese_spedizione }} € </p>
+            <p>Tempi di consegna : {{ ordine.corriere.delay }}</p>
+            {% if ordine.stato_id != 4 %}
+            <p>Il tuo ordine non è stato ancora spedito.</p>
+            {% else %}
+                {% if ordine.url_tracciamento != "" %}
+                <p><a href="{{ ordine.url_tracciamento }}"><button class="btn btn-info">Tracking spedizione</button> </a></p>
+                {% endif %}
+            {% endif %}
+            <p><b>Indirizzo consegna: </b></p>
+            <p>{{ ordine.indirizzo_spedizione.nome }} {{ ordine.indirizzo_spedizione.cognome }} </br>
+            Via {{ ordine.indirizzo_spedizione.via }} {{ ordine.indirizzo_spedizione.n_civico }} {{ ordine.indirizzo_spedizione.citta.nome }} ({{ ordine.indirizzo_spedizione.citta.provincia }}) - {{ ordine.indirizzo_spedizione.cap }}
+            </br>{{ ordine.indirizzo_spedizione.n_cellulare }} - {{ ordine.indirizzo_spedizione.n_telefono }}
+            </p>
+
+            {% if ordine.fattura %}
+            <p><b>Indirizzo fatturazione: </b></p>
+            <p>{{ ordine.indirizzo_fatturazione.nome }} {{ ordine.indirizzo_fatturazione.cognome }} </br>
+            Via {{ ordine.indirizzo_fatturazione.via }} {{ ordine.indirizzo_fatturazione.n_civico }} {{ ordine.indirizzo_fatturazione.citta.nome }} ({{ ordine.indirizzo_fatturazione.citta.provincia }}) - {{ ordine.indirizzo_fatturazione.cap }}
+            </br>{{ ordine.indirizzo_fatturazione.n_cellulare }} - {{ ordine.indirizzo_fatturazione.n_telefono }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

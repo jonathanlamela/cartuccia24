@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="{{ settings.ASSETS_URL }}js/bootstrap.min.js"></script>
+    <link href="{{ settings.ASSETS_URL }}css/select2.min.css" rel="stylesheet" />
+    <script src="{{ settings.ASSETS_URL }}js/select2.min.js"></script>
+<script src="{{ settings.ASSETS_URL }}js/cookielaw.js"></script>
+    <link rel="stylesheet" href="{{ settings.ASSETS_URL }}css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ settings.ASSETS_URL }}css/app_theme.css"/>
+    <title>{% block title %}{% endblock %}</title>
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5790b03c660462dd70bb814e/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+
+    {% load cookielaw_tags %}
+</head>
+<body>
+
+
+
+<div class="navbar-wrapper">
+
+    <nav class="navbar navbar-default" style="padding-left: 5%;padding-right: 5%;margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Mostra menù</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Cartuccia24.com</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right: 5px">
+            <ul class="nav navbar-nav">
+                {% for pagina in pages %}
+                    {% if pagina.get_childrens|length > 0 %}
+                        <li class="dropdown">
+                            <a href="/s/{{ pagina.url }}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ pagina.titolo }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/s/{{ pagina.url }}">{{ pagina.titolo }}</a></li>
+                                {% for child in pagina.get_childrens %}
+                                    <li><a href="/s/{{ child.url }}">{{ child.titolo }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="/s/{{ pagina.url }}">{{ pagina.titolo }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                <li><a href="/contattaci">Contattaci</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if request.user.is_authenticated %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ request.user.username }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/account/profilo/">Il mio profilo</a></li>
+                            <li><a href="/account/stampanti/">Le mie stampanti</a></li>
+                            <li><a href="/account/ordini/">I miei ordini</a></li>
+                            {% if request.user.is_superuser %}
+                                <li><a href="/admin">Amministrazione</a></li>
+                            {% endif %}
+                            <li><a href="/logout">Disconnetti</a></li>
+                        </ul>
+                    </li>
+
+                {% else %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Accedi / Registrati <span class="caret"></span></a>
+                        <ul id="login-dp" class="dropdown-menu">
+                            <li>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form class="form" role="form" method="post" action="/login" accept-charset="UTF-8" id="login-nav">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail2">Email/Username</label>
+                                                <input type="text" name='email' class="form-control" id="exampleInputEmail2" placeholder="Email/Username" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label  for="exampleInputPassword2">Password</label>
+                                                <input type="password" name='password' class="form-control" id="exampleInputPassword2" placeholder="Password" required>
+                                                <div class="help-block text-right"><a href="/recupera/password/">Hai dimenticato la password ?</a></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary btn-block">Accedi</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="bottom text-center">
+                                        Sei nuovo ? <a href="/registrazione/"><b>Registrati</b></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div><!-- /.navbar-collapse -->
+
+    </nav>
+    <nav class="navbar navbar-default" style="padding-left: 5%;padding-right: 5%;background-color: #e95420">
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding-right: 5px">
+
+            {% block breadcrumb %}
+
+            {% endblock %}
+
+            <ul class="nav navbar-nav">
+                  <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-shopping-cart"></i><span class="badge">{{ carrello.count }}</span></a></a>
+                        <ul id="carrello-dp" class="dropdown-menu">
+                            <li>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {% if carrello.count == 0 %}
+                <p>Non ci sono prodotti sul tuo carrello</p>
+            {% else %}
+            <table class="table table-responsive">
+                <thead>
+                    <th>Prodotto</th>
+                    <th>Qta</th>
+                    <th>Prezzo</th>
+                    <th>Azioni</th>
+                </thead>
+                <tbody>
+                    {% for prodotto in carrello %}
+                        <tr>
+                            <td>{{ prodotto.product.mpn }}</td>
+                            <td>{{ prodotto.quantity }}</td>
+                            <td>{{ prodotto.unit_price }} €</td>
+                            <td>
+                                <a href="/carrello/rimuovi/{{ prodotto.product.id }}/" style="padding: 5px"><i class="glyphicon glyphicon-trash"></i></a>
+                                <a href="/carrello/diminuisci/{{ prodotto.product.id }}/" style="padding: 5px"></as><i class="glyphicon glyphicon-minus"></i></a>
+                                <a href="/carrello/incrementa/{{ prodotto.product.id }}/" style="padding: 5px"></as><i class="glyphicon glyphicon-plus"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><b>Totale</b></td>
+                        <td>{{ carrello.count }}</td>
+                        <td>{{ carrello.summary }} €</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a href="/carrello/"><button class="btn btn-danger">CARRELLO</button></a>
+            {% endif %}
+
+
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                <li>
+
+            </ul>
+
+            <form class="navbar-form navbar-right" role="search" action="/ricerca/" method="GET">
+                <div class="form-group">
+                    <input name="keyword" value="{% block keyword %}{% endblock %}" type="text" class="form-control" placeholder="EAN/MPN/Nome">
+                </div>
+                <button type="submit" class="btn btn-default">Cerca</button>
+            </form>
+        </div><!-- /.navbar-collapse -->
+
+    </nav>
+</div>
+
+<div style="padding-left: 5%;padding-right: 5%;min-height: 600px">
+    {% cookielaw_banner %}
+    {% if msg_login %}
+        <div class="alert alert-{{ msg_login.type }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ msg_login.msg }}
+        </div>
+
+    {% endif %}
+    {% block content %}{% endblock %}
+
+</div>
+
+{% block footer %}
+        {% include "footer.html" %}
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}Nuovo indirizzo{% endblock %}
+
+{% block head %}
+    <link href="/static/autocomplete_light/vendor/select2/dist/css/select2.css" type="text/css" media="all" rel="stylesheet">
+    <link href="/static/autocomplete_light/select2.css" type="text/css" media="all" rel="stylesheet">
+    <script type="text/javascript" src="/static/autocomplete_light/jquery.init.js"></script>
+    <script type="text/javascript" src="/static/autocomplete_light/autocomplete.init.js"></script>
+    <script type="text/javascript" src="/static/autocomplete_light/vendor/select2/dist/js/select2.full.js"></script>
+    <script type="text/javascript" src="/static/autocomplete_light/select2.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <form class="form form-horizontal col-md-4" method="post" action="/account/profilo/cambia/indirizzi/crea/">
+        {% csrf_token %}
+
+        {{ form.utente_id }}
+
+        <div class="form-group">
+            <label>{{ form.alias.label|upper }}</label>
+            <input type="text" name="{{ form.alias.name }}" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.azienda.label|upper }}</label>
+            <input type="text" name="{{ form.azienda.name }}" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.nome.label|upper }}</label>
+            <input type="text" name="{{ form.nome.name }}" class="form-control"/>
+            {{ form.nome.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.cognome.label|upper }}</label>
+            <input type="text" name="{{ form.cognome.name }}" class="form-control"/>
+            {{ form.cognome.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.codice_fiscale.label|upper }}</label>
+            <input type="text" name="{{ form.codice_fiscale.name }}" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.p_iva.label|upper }}</label>
+            <input type="text" name="{{ form.p_iva.name }}" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.n_telefono.label|upper }}</label>
+            <input type="text" name="{{ form.n_telefono.name }}" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.n_cellulare.label|upper }}</label>
+            <input type="text" name="{{ form.n_cellulare.name }}" class="form-control"/>
+        </div>
+
+
+        <div class="form-group">
+            <label>{{ form.via.label|upper }}</label>
+            <input type="text" name="{{ form.via.name }}" class="form-control"/>
+            {{ form.via.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.n_civico.label|upper }}</label>
+            <input type="text" name="{{ form.n_civico.name }}" class="form-control"/>
+            {{ form.n_civico.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>CITTA'</label>
+            </br>{{ form.citta }}
+            {{ form.citta.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.cap.label|upper }}</label>
+            <input type="text" name="{{ form.cap.name }}" class="form-control"/>
+            {{ form.cap.errors }}
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-success" value="Aggiungi indirizzo">
+        </div>
+
+
+    </form>
+    {{ form.media }}
+{% endblock %}

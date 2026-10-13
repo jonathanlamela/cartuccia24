@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ produttore.nome }}{% endblock %}
+
+
+{% block content %}
+
+    <div class="col-md-12" style="padding-bottom: 5%">
+        <h2>Serie marca {{ produttore.nome }}</h2>
+        <div class="col-md-2" style="text-align: center">
+            <h5><a href="/stampante/{{ produttore.id }}/serie/0"><b>Tutte le serie</b></a></h5>
+        </div>
+        {% for serie in series %}
+            <div class="col-md-2" style="text-align: center">
+                <h5><a href="/stampante/{{ produttore.id }}/serie/{{ serie.id }}">{{ serie.nome }}</a></h5>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

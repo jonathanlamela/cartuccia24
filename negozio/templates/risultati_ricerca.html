@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}Risultati di ricerca{% endblock %}
+
+
+{% block keyword %}{{ keyword }}{% endblock %}
+
+{% block content %}
+
+    <ul class="nav nav-tabs" data-tabs="tabs">
+        <li {% if active_tab == "stampanti" %}class="active"{% endif %} style="{% if printer.count == 0 %}display:none{% endif %}">
+            <a data-toggle="tab" href="#stampanti">Stampanti ({{ printer.count }})</a>
+        </li>
+        <li {% if active_tab == "prodotti" %}class="active"{% endif %} style="{% if product.count == 0 %}display:none{% endif %}">
+            <a  data-toggle="tab" href="#prodotti">Prodotti ({{ product.count }})</a>
+        </li>
+    </ul>
+    <div class="tab-content clearfix">
+        <div id="stampanti" class="tab-pane {% if active_tab == "stampanti" %}fade in active{% endif %}">
+            <div class="col-md-12">
+                {% for stampante in printer %}
+                    <div class="col-md-3">
+                        <a href="/stampante/{{ stampante.slug }}">{{ stampante.nome }}</a>
+                    </div>
+                {%  endfor %}
+            </div>
+        </div>
+        <div id="prodotti" class="tab-pane {% if active_tab == "prodotti" %}fade in active{% endif %}">
+            <div class="col-md-12">
+                {% for prodotto in product %}
+                    <div class="col-md-3">
+                        <a href="/prodotto/{{ prodotto.slug }}">{{ prodotto.nome }}</a>
+                    </div>
+                {%  endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

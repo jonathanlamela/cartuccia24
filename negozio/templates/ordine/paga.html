@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}Paga ordine{% endblock %}
+
+{% block content %}
+
+    <form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr">
+        {{ form }}
+        <input type="submit" value="Paga ordine" class="btn btn-success">
+    </form>
+
+{% endblock %}

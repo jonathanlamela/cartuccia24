@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}Registrazione al sito{% endblock %}
+
+{% block content %}
+    <form class="form form-horizontal col-md-4" method="POST">
+        {% csrf_token %}
+        <div class="control-group">
+            <label>{{ form.nome.label }}</label>
+            <input type="text" class="form-control" value="{% if form.nome.value %}{{ form.nome.value }} {% endif %}" name="{{ form.nome.html_name }}"/>
+            <span class="help-block">{{ form.nome.errors }}</span>
+        </div>
+        <div class="control-group">
+            <label>{{ form.cognome.label }}</label>
+            <input type="text" class="form-control" value="{% if form.cognome.value %}{{ form.cognome.value }} {% endif %}" name="{{ form.cognome.html_name }}"/>
+            <span class="help-block">{{ form.cognome.errors }}</span>
+        </div>
+        <div class="control-group">
+            <label>{{ form.email.label }}</label>
+            <input type="email" class="form-control" value="{% if form.email.value %}{{ form.email.value }} {% endif %}" name="{{ form.email.html_name }}"/>
+            <span class="help-block">{{ form.email.errors }}</span>
+        </div>
+        <div class="control-group">
+            <label>{{ form.username.label }}</label>
+            <input type="text" class="form-control" value="{% if form.username.value %}{{ form.username.value }} {% endif %}" name="{{ form.username.html_name }}"/>
+            <span class="help-block">{{ form.username.errors }}</span>
+        </div>
+        <div class="control-group">
+            <label>Password</label>
+            <input type="password" class="form-control" value="{% if form.password1.value %}{{ form.password1.value }}{% endif %}" name="{{ form.password1.html_name }}"/>
+            <span class="help-block">{{ form.password1.help_text }}</span>
+            {{ form.password1.errors }}
+        </div>
+        <div class="control-group">
+            <label>Password (conferma)</label>
+            <input type="password" class="form-control" value="{% if form.password2.value %}{{ form.password2.value }}{% endif %}"  name="{{ form.password2.html_name }}"/>
+            <span class="help-block">{{ form.password2.help_text }}</span>
+            {{ form.password2.errors }}
+        </div>
+        <p>Registrandoti accetti la normativa sul trattamento dei dati personali. I tuoi dati non verranno condivisi ad altri per campagne pubblicitarie o promozioni al di fuori del nostro sito.</p>
+        </br>
+        <div class="control-group">
+            <input type="submit" name="submit" value="Registrami" class="form-control btn btn-success"/>
+        </div>
+    </form>
+
+{% endblock %}

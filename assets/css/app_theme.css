@@ -1,0 +1,54 @@
+#motore_ricerca{
+    padding-right: 0;
+    padding-left: 0;
+    padding-bottom: 2%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #888787;
+    padding-top: 2%;
+    background-color: #efefef;
+}
+
+.shadow{
+    -webkit-box-shadow: 0 0 2.5em 0.5em rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 0 2.5em 0.5em rgba(0,0,0,0.4);
+    box-shadow: 0 0 2.5em 0.5em rgba(0,0,0,0.4);
+}
+
+#breadcrumb-menu a{
+    color:white;
+}
+
+.carousel-control.right {
+    left: auto;
+    right: 0;
+    background-image: none;
+}
+
+.carousel-control.left {
+    left: auto;
+    left: 0;
+    background-image: none;
+}
+
+#login-dp{
+    padding-bottom: 10%;
+    padding-left: 10%;
+    padding-right: 10%;
+    min-width: 300px;
+    background-color: white;
+    padding-top: 10%;
+}
+
+#carrello-dp{
+    padding-bottom: 10%;
+    padding-left: 10%;
+    padding-right: 10%;
+    min-width: 400px;
+    background-color: white;
+    padding-top: 10%;
+}
+
+#CookielawBanner{
+    background-color: #f3f0ea;
+}

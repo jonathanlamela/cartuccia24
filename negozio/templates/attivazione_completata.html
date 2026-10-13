@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}Attivazione completata{% endblock %}
+
+{% block content %}
+    {% if status == "OK" %}
+    <p>Il tuo account è attivo. Adesso dovresti inserire almeno un indirizzo dove possiamo spedire o fatturare i tuoi prodotti.Clicca <a href="/account/profilo/cambia/indirizzi/crea/">qui</a> per inserire il tuo primo indirizzo:</p>
+
+    {% elif status == "ChiaveScaduta" %}
+    <p>La chiave di attivazione non è più valida.E' necessario richiederla di nuovo. Per reinviare l'email di attivazione clicca sul link in basso:</p>
+    <a href="/registrazione/email/{{ id }}/">Richiedi codice attivazione</a>
+    {% endif %}
+{% endblock %}

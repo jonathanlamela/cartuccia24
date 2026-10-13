@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}{% if serie %}Serie {{ serie.nome }}{% else %} Tutte le stampanti {{ produttore.nome }} {% endif %}{% endblock %}
+
+{% block content %}
+    <h3>{% if serie %}Serie {{ serie.nome }}{% else %} Tutte le stampanti {{ produttore.nome }} {% endif %}</h3>
+    <p><a href="/serie/{{ produttore.id }}"><button class="btn btn-info">Torna alle serie</button></a></p>
+    <div class="col-md-12" style="padding-bottom: 5%">
+        {% for stampante in printer %}
+            <div class="col-md-3">
+                <a href="/stampante/{{ stampante.slug }}">{{ stampante.nome }}</a>
+            </div>
+        {%  endfor %}
+    </div>
+
+{% endblock %}

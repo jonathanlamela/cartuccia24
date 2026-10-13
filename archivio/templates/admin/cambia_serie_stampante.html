@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<form action="" method="post">
+
+    {% csrf_token %}
+    {{ serie_form }}
+
+    {{ serie.form.nome }}
+
+    <p>La serie verrà cambiata ai modelli:</p>
+
+    <div style="display: none">
+        {{ modelli }}
+    </div>
+
+    <ul>
+    {% for modello in modelli %}
+       <li>{{ modello.marca.nome }} {{ modello.nome }}</li>
+    {% endfor %}
+    </ul>
+
+    <input type="hidden" name="action" value="cambia_serie_stampante" />
+    <input type="submit" name="apply" value="Cambia serie" />
+</form>
+
+{% endblock %}

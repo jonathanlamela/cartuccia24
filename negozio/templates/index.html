@@ -1,0 +1,269 @@
+{% extends "layout.html" %}
+
+{% block title %}Cartuccia24{% endblock %}
+
+
+
+
+{% block content %}
+    <style>
+        .navbar{
+            margin-bottom: 0;
+        }
+
+        @media (min-width: 992px){
+            .col-md-2 {
+                width: 16.66666667%;
+                height: 200px;
+            }
+        }
+
+
+    </style>
+    <div class="row">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                {% for slide in slider %}
+                    {% if slider|first == slide %}
+                        <div class="item active">
+                    {% else %}
+                        <div class="item">
+                    {% endif %}
+                <img class="third-slide" style="width: 100%;margin-top: -5px;
+    z-index: -1;" src="/slides/{{ slide.pk }}/" alt="{{ slide.titolo }}">
+                <div class="container">
+                </div>
+                </div>
+                {% endfor %}
+                </div>
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Precedente</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Successivo</span>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="font-size: 13pt;
+    color: white;
+    background-color: black;
+    margin-left: 0px;
+    margin-right: 0px;">
+            <div class="col-md-12" style="padding-bottom: 2%;
+    padding-top: 2%;">
+                <div class="col-md-4" style="text-align: center">
+                    <img src="http://icons.iconarchive.com/icons/dtafalonso/android-l/512/WhatsApp-icon.png" width="32px" height="32px">
+                    Whatsapp : +39 001122334455
+                </div>
+                <div class="col-md-4" style="text-align: center">
+                    <img src="https://cdn0.iconfinder.com/data/icons/social-15/200/mail-icon-128.png" width="32px" height="32px">
+                    Email : info@cartuccia24.com
+                </div>
+                <div class="col-md-4" style="text-align: center">
+
+                    <img src="http://www.freeiconspng.com/uploads/dentist-rochester-ny--contemporary-dentistry-rochester-ny-24.png" width="32px" height="32px">
+                    Tel. +02 0011122334455
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-right: 0;margin-left: 0">
+            <div class="col-md-12" style="padding-right: 0;padding-left: 0;padding-bottom: 2%" id="motore_ricerca">
+
+                <div class="col-md-3" >
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h5>Motore di ricerca</h5>
+                        </div>
+                        <div class="panel-body">
+                            <form class="form-horizontal" action="/st/" method="POST" style="padding-bottom: 10%">
+                                {% csrf_token %}
+                                <style>
+                                    .select2 .select2-container .select2-container--default{
+                                        width: 100%;
+                                    }
+                                </style>
+                                <div class="control-group">
+                                    <label for="marca">Seleziona una marca</label>
+                                    <select name="marca" class="form-control" id="select_marca">
+                                        {% for marca in marche %}
+                                            <option value="{{ marca.id }}">{{ marca.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <script>
+                                        $(document).ready(function(){
+                                            $("#select_marca").select2();
+                                            $(".select2 ").css("width","100%");
+                                            $("#select_marca").change(function(){
+
+                                                $("#cerca-serie").hide();
+                                                $("#modello").hide();
+                                                $("#cerca").hide();
+
+                                                $.ajax("/get-series/",{
+                                                    data:{"q":$("#select_marca").val()},
+                                                    success:function(data){
+                                                        results = data.results;
+                                                        $("select[name='serie']").empty();
+                                                        if (results.length > 0){
+                                                            for (var i = 0;i < results.length;i++){
+                                                                var serie = results[i];
+                                                                $("select[name='serie']").append("<option value='"+serie.id+"'>"+serie.text+"</option>")
+                                                            }
+                                                            $("select[name='serie']").prepend("<option value='0'>-- Tutte --</option>");
+                                                            $("select[name='serie']").select2();
+                                                            $(".select2-container").css("width","100%");
+
+                                                            $("#cerca-serie").show();
+                                                        } else {
+                                                            $("#cerca-serie").hide();
+
+                                                            $.ajax("/get-printers/",{
+                                                                data:{
+                                                                    "marca":$("select[name='marca']").val(),
+                                                                    "serie":"0"
+                                                                },
+                                                                success:function(data){
+                                                                    $("select[name='modello']").empty();
+                                                                    results = data;
+                                                                    if (results.length > 0){
+                                                                        for (var i = 0;i < results.length;i++){
+                                                                            var modello = results[i];
+                                                                            $("select[name='modello']").append("<option value='"+modello.id+"'>"+modello.nome+"</option>")
+                                                                        }
+                                                                        $("select[name='modello']").select2();
+                                                                        $(".select2-container").css("width","100%");
+                                                                        $("#modello").show();
+                                                                        $("#cerca").show();
+                                                                    } else {
+                                                                        $("#modello").hide();
+                                                                        $("#cerca").hide();
+                                                                    }
+                                                                }
+                                                            })
+
+                                                            $("#modello").show();
+                                                            $("#cerca").show();
+                                                        }
+                                                    }
+                                                })
+                                            });
+                                            $("select[name='serie']").change(function(){
+                                                $("#modello").hide();
+                                                $("#cerca").hide();
+                                                $.ajax("/get-printers/",{
+                                                    data:{
+                                                        "serie":$("select[name='serie']").val(),
+                                                        "marca":$("select[name='marca']").val()
+                                                    },
+                                                    success:function(data){
+                                                        $("select[name='modello']").empty();
+                                                        results = data;
+                                                        if (results.length > 0){
+                                                            for (var i = 0;i < results.length;i++){
+                                                                var modello = results[i];
+                                                                $("select[name='modello']").append("<option value='"+modello.id+"'>"+modello.nome+"</option>")
+                                                            }
+                                                            $("select[name='modello']").select2();
+                                                            $(".select2-container").css("width","100%");
+                                                            $("#modello").show();
+                                                            $("#cerca").show();
+                                                        } else {
+                                                            $("#modello").hide();
+                                                            $("#cerca").hide();
+                                                        }
+                                                    }
+                                                })
+                                            });
+                                        });
+                                    </script>
+                                </div>
+
+                                <div class="control-group" id="cerca-serie" style="display:none">
+                                    <label for="serie">Seleziona la serie</label>
+                                    <select name="serie" class="form-control"></select>
+                                </div>
+                                <div class="control-group" id="modello" style="display: none">
+                                    <label for="modello">Seleziona un modello</label>
+                                    <select name="modello" class="form-control"></select>
+                                </div>
+                                <div class="control-group" style="padding-top: 5px;display: none" id="cerca">
+                                    <input type="submit" class="btn btn-success" value="Cerca">
+                                </div>
+                            </form>
+                            <h5>Ricerca testuale</h5>
+                            <form class="form form-inline" role="search" action="/ricerca/" method="GET">
+                                <div class="form-group">
+                                    <input name="keyword" value="{% block keyword %}{% endblock %}" type="text" class="form-control" placeholder="EAN/MPN/Nome" style="width: 100%">
+                                </div>
+                                <button type="submit" class="btn btn-default">Cerca</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-9">
+                    <h5>I produttori più cercati</h5>
+                    {% for marca in marche_maggiori %}
+                        <div class="col-md-4" style="min-height: 100px;text-align: center">
+                            <a href="/serie/{{ marca.id }}">
+                                <img src="/assets/manufacturer/{{ marca.image_name }}" width="50%" height="auto"/>
+                            </a>
+                        </div>
+
+                    {% endfor %}
+                     <h3 style="float: right;"><a href="/produttore/tutti/">Tutti i produttori</a></h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3 style="padding-bottom: 10px">Ultime stampanti</h3>
+                {% for modello in modelli %}
+                    <div class="col-md-2" style="text-align: center;padding-bottom: 2%;min-height: 200px;">
+                        <a href="/stampante/{{ modello.slug }}.html"><img src="{{ modello.url_image }}" width="50%" height="50%"/></a>
+                        <a href="/stampante/{{ modello.slug }}.html"><h5 style="min-height: 70px;text-align: center;padding-top: 5%">{{ modello.nome }}</h5></a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Ultime offerte</h4>
+                    </div>
+                    <div class="panel-body">
+                        {% for prodotto in ultime_offerte %}
+
+                            {% if prodotto.product_image != "" %}
+                                <div class="col-md-2" style="margin-bottom: 5%;text-align: center;">
+                                    <div style="min-height: 160px;" data-toggle="tooltip" title="{{ prodotto.nome }}">
+                                        <a href="/prodotto/{{ prodotto.slug }}.html">
+                                            <div style="min-height: 120px"><img src="{{ prodotto.url_image }}" width="50%" height="50%"/></div>
+                                        </a>
+                                        <a href="/prodotto/{{ prodotto.slug }}.html" style="text-align: center"><h5>{{ prodotto.mpn }}</h5></a>
+                                    </div>
+                                    <div style="padding-top: 5%;padding-bottom: 5%;text-align: center;">
+                                        <a href="/carrello/aggiungi/{{ prodotto.id }}" class="btn btn-success" ><span class="glyphicon glyphicon-shopping-cart"></span></a>
+                                        <a href="/prodotto/{{ prodotto.slug }}.html" class="btn btn-info">{{ prodotto.offerte.first.prezzo_ivato }} €</a>
+                                    </div>
+                                    <script>
+                                        $('div[data-toggle="tooltip"]').tooltip();
+                                    </script>
+
+
+                                </div>
+
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

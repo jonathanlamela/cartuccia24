@@ -1,0 +1,11 @@
+<urlset xmls="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>http://www.cartuccia24.com/sitemap/?q=sitemap_prodotti.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>http://www.cartuccia24.com/sitemap/?q=sitemap_stampanti.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>http://www.cartuccia24.com/sitemap/?q=sitemap_pagine.xml</loc>
+  </sitemap>
+</urlset>

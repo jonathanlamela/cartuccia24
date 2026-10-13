@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}Risultati di ricerca per {{ produttore.nome }}{% endblock %}
+
+{% block content %}
+
+    <ul class="nav nav-tabs" data-tabs="tabs">
+        <li {% if active_tab == "stampanti" %}class="active"{% endif %} style="{% if printer.count == 0 %}display:none{% endif %}">
+            <a data-toggle="tab" href="#stampanti">Stampanti ({{ printer.count }})</a>
+        </li>
+        <li {% if active_tab == "prodotti" %}class="active"{% endif %} style="{% if product.count == 0 %}display:none{% endif %}">
+            <a  data-toggle="tab" href="#prodotti">Prodotti ({{ product.count }})</a>
+        </li>
+    </ul>
+    <div class="tab-content clearfix">
+        <div id="stampanti" class="tab-pane {% if active_tab == "stampanti" %}fade in active{% endif %}">
+
+            <div class="col-md-12">
+                {% for stampante in printer %}
+                    <div class="col-md-3">
+                        <a href="/stampante/{{ stampante.slug }}">{{ stampante.nome }}</a>
+                    </div>
+                {%  endfor %}
+            </div>
+        </div>
+        <div id="prodotti" class="tab-pane {% if active_tab == "prodotti" %}fade in active{% endif %}">
+
+                {% for prodotto in product %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <a href="/prodotto/{{ prodotto.slug }}">{{ prodotto.nome }}</a>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-3">
+                                {% if prodotto.url_image|length > 0 %}
+                                    <img src="{{ prodotto.url_image }}" width="200px" height="auto" style="max-height: 200px" />
+                                {% else %}
+                                    <img src="/assets/img/no-image.gif" width="200px" height="auto" style="max-height: 200px"/>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-9">
+                                {{ prodotto.descrizione_breve }}
+                            </div>
+                        </div>
+                        <div class="panel-footer" style="height: 60px">
+                            {% if prodotto.offerte.first and prodotto.offerte.first.qta > 0 %}
+                                <span class="pull-right"><a href="/prodotto/{{ prodotto.slug }}.html"><button class="btn btn-info">{{ prodotto.offerte.first.prezzo_ivato }} €</button></a></span>
+                                <span class="pull-right"><a href="/carrello/aggiungi/{{ prodotto.id }}/"><button class="btn btn-success">Aggiungi al carrello</button></a></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {%  endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}

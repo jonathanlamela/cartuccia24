@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ printer.nome }}{% endblock %}
+
+{% block content %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ printer.nome }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-4" style="text-align: center">
+                {% if printer.url_image|length > 0 %}
+                    <img src="{{ printer.url_image }}" width="100%" height="auto"  />
+                {% else %}
+                    <img src="/images/{{ printer.mpn }}" width="100%" height="auto" />
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <table class="table">
+                    <thead>
+                    Informazioni base
+                    </thead>
+                    <tr>
+                        <td><b>MPN</b></td>
+                        <td>{{ printer.mpn }}</td>
+                    </tr>
+                    {% if printer.ean %}
+                        <tr>
+                            <td><b>EAN</b></td>
+                            <td>{{ printer.ean }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td><b>Marca</b></td>
+                        {% if printer.marca.url_immagine != "" %}
+                            <td><a href="/serie/{{ printer.marca.id }}"><img src="/assets/manufacturer/{{ printer.marca.image_name }}" alt="{{ printer.marca.nome }}" width="100px" height="auto"/></a></td>
+                        {% else %}
+                            <td><a href="/serie/{{ printer.marca.id }}">{{ printer.marca.nome }}</a></td>
+                        {% endif %}
+                    </tr>
+                    {% if printer.serie %}
+                        <tr>
+                            <td><b>Serie</b></td>
+                            <td><a href="/stampante/{{ printer.marca.id }}/serie/{{ printer.serie.id }}">{{ printer.serie.nome }}</a></td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td><b>Categoria</b></td>
+                        <td>{{ printer.categoria.nome }}</td>
+                    </tr>
+                    {% if request.user.is_authenticated %}
+                    <tr>
+                        <td></td>
+                        <td><a href="/account/stampanti/aggiungi/{{ printer.id }}"><button class="btn btn-info">Aggiungi stampante ai preferiti</button></a></td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if printer.descrizione_breve %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Descrizione breve</h3>
+            </div>
+            <div class="panel-body">
+                {{ printer.descrizione_breve }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if printer.descrizione_lunga %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Descrizione completa</h3>
+            </div>
+            <div class="panel-body">
+                {{ printer.descrizione_lunga|cut:"\n"|safe }}
+            </div>
+        </div>
+    {% endif %}
+
+
+
+    {% if printer.prodotti_associati.all|length > 0 %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Consumabili e prodotti correlati</h3>
+            </div>
+            <div class="panel-body">
+                {% for prodotto in printer.prodotti_associati.all %}
+                    <div class="col-md-12" style="text-align: center;padding-bottom: 2%;">
+                        <div style="min-height: 200px" class="col-md-3">
+                            {% if prodotto.url_image|length > 0 %}
+                                <img src="{{ prodotto.url_image }}" width="200px" height="auto" style="max-height: 200px" />
+                            {% else %}
+                                <img src="/images/{{ prodotto.mpn }}" width="100%" height="auto" />
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <a href="/prodotto/{{ prodotto.slug }}.html"><h4>{{ prodotto.nome }}</h4></a>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-responsive" style="text-align: left">
+                                        {% if prodotto.mpn %}
+                                            <tr>
+                                                <td style="width: 10%"><b>MPN</b></td>
+                                                <td>{{ prodotto.mpn }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if prodotto.ean %}
+                                            <tr>
+                                                <td style="width: 10%"><b>EAN</b></td>
+                                                <td>{{ prodotto.ean }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if prodotto.marca %}
+                                            <tr>
+                                                <td style="width: 10%"><b>Produttore</b></td>
+                                                <td>{{ prodotto.marca.nome }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if prodotto.descrizione_breve %}
+                                            <tr>
+                                                <td style="width: 10%"><b>Descrizione</b></td>
+                                                <td>{{ prodotto.descrizione_breve }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    </table>
+                                </div>
+                                <div class="panel-footer" style="text-align: right;height: 60px">
+                                    {% if prodotto.offerte.first and prodotto.offerte.first.qta > 0 %}
+                                        <span class="pull-right"><a href="/prodotto/{{ prodotto.slug }}.html"><button class="btn btn-info">{{ prodotto.offerte.first.prezzo_ivato }} €</button></a></span>
+                                        <span class="pull-right"><a href="/carrello/aggiungi/{{ prodotto.id }}/"><button class="btn btn-success">Aggiungi al carrello</button></a></span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+
+
+    </div>
+{% endblock %}

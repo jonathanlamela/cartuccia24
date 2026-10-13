@@ -1,0 +1,7 @@
+</br>
+<b>Associati:</b>
+</br>
+{% for object in objects %}
+    <a href="{{ object.1 }}" >#({{ object.0.pk }}) {{ object.0.mpn }} - {{ object.0.nome }}</a></br>
+{% endfor %}
+

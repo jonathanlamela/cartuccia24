@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% load i18n static %}
+
+{% block title %}Informazioni account{% endblock %}
+
+{% block content %}
+
+    {% if message %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endif %}
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="/account/profilo/">Profilo</a></li>
+        <li role="presentation"><a href="/account/stampanti/">Stampanti preferite</a></li>
+        <li role="presentation"><a href="/account/ordini/">Ordini</a></li>
+    </ul>
+
+    <div class="tab-content" class="tab-pane active">
+    <h4>Gestione account</h4>
+    <ul>
+        <li>
+            <a href="/account/profilo/cambia/informazioni/">Cambia informazioni base (nome,cognome)</a>
+        </li>
+        <li>
+             <a href="/account/profilo/cambia/password/">Cambia password</a>
+        </li>
+        <li>
+             <a href="/account/profilo/cambia/indirizzi/">I miei indirizzi</a>
+        </li>
+    </ul>
+
+
+
+    </div>
+
+{% endblock %}

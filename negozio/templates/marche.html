@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Le nostre marche{% endblock %}
+
+
+
+
+{% block content %}
+    <style>
+        .navbar{
+            margin-bottom: 0;
+        }
+
+    </style>
+
+    <div class="row" style="min-height: 600px;">
+        <div class="col-md-12" style="padding-left: 5%;padding-right: 2%;text-align: center">
+            <h4 style=";padding-left: 2%">I nostri brands</h4>
+            <hr>
+            {% for marca in marche %}
+                <div class="col-md-2" style="padding-bottom: 5%;height: 100px">
+                    <a href="/serie/{{ marca.id }}">
+                        <img src="/assets/manufacturer/{{ marca.image_name }}" width="50%" height="auto"/>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

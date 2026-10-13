@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}I miei indirizzi{% endblock %}
+
+{% block content %}
+
+    <h2>Indirizzi</h2>
+    <p>Inserisci i tuoi indirizzi per la spedizione o la fatturazione. Ad ogni ordine non sarà necessario inserire di nuovo i dati. Scegli dove vuoi spedire e dove vuoi fatturare se desideri la fattura.</p>
+    <a href="/account/profilo/cambia/indirizzi/crea/"><button class="btn btn-success">Crea nuovo indirizzo</button></a>
+    <table class="table table-responsive">
+        <thead>
+        <th>Alias</th>
+        <th>Via/Piazza</th>
+        <th>N° civico</th>
+        <th>Città</th>
+        <th>Azioni</th>
+        </thead>
+        <tbody>
+        {% for indirizzo in indirizzi %}
+            <tr>
+                <td>{{ indirizzo.alias }}</td>
+                <td>{{ indirizzo.via }}</td>
+                <td>{{ indirizzo.n_civico }}</td>
+                <td>{{ indirizzo.citta }}</td>
+                <td><a href="/account/profilo/cambia/indirizzi/modifica/{{ indirizzo.id }}/">Modifica</a> | <a href="/account/profilo/cambia/indirizzi/elimina/{{ indirizzo.id }}/">Elimina</a></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}

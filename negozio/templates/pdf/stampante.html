@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stampante</title>
+</head>
+<body>
+    <h1>{{ stampante.nome }}</h1>
+    <p>Codice {{ stampante.mpn }}</p>
+    <p><b>Marca :</b> {{ stampante.marca.nome }}</p>
+    <img src="{{ stampante.url_image }}" width="200px" height="auto"/>
+    <p><b>Descrizione breve: </b>{{ stampante.descrizione_breve }}</p>
+    <p><b>Descrizione approfondita: </b>{{ stampante.descrizione_lunga }}</p>
+
+</body>
+</html>

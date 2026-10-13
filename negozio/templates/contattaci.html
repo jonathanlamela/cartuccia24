@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}Contattaci{% endblock %}
+
+{% block content %}
+    {% if msg %}
+    <div class="alert alert-success alert-dismissable">
+        {{ msg }}
+    </div>
+    {% endif %}
+    <h4>Come contattarci</h4>
+    <p>Compila il form qui in basso , ti risponderemo quanto prima. Se disponibile puoi usare la chat per parlare con noi.</p>
+    <form method="POST" action="/contattaci/" class="form-horizontal col-md-4">
+        {% csrf_token %}
+        <div class="control-group">
+            <label>Nome:</label>
+            <input type="text" class="form-control" name="{{ form.nome.name }}">
+            {{ form.nome.errors }}
+        </div>
+        <div class="control-group">
+            <label>Cognome:</label>
+            <input type="text" class="form-control" name="{{ form.cognome.name }}">
+            {{ form.cognome.errors }}
+        </div>
+        <div class="control-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" name="{{ form.email.name }}">
+            {{ form.email.errors }}
+        </div>
+        <div class="control-group">
+            <label>Oggetto:</label>
+            <input type="text" class="form-control" name="{{ form.oggetto.name }}">
+            {{ form.oggetto.errors }}
+        </div>
+        <div class="control-group">
+            <label>Messaggio:</label>
+            <textarea type="text" class="form-control" name="{{ form.messaggio.name }}"></textarea>
+            {{ form.messaggio.errors }}
+        </div>
+        </br>
+        <div class="control-group">
+            <input type="submit" class="btn btn-success" value="Invia messaggio"/>
+        </div>
+
+    </form>
+{% endblock %}

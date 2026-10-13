@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attivazione account</title>
+</head>
+<body >
+<div class="container" style="font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12pt">
+    <div style="
+    width: 100%;
+    background-color: #333333;
+    ">
+        <a style="
+        text-decoration: none;
+        color:white;height: 45px;font-size: 19px;padding: 12px 15px;" href="http://test.pulitecna.it"><p style="padding-left: 5%;">Cartuccia24.com</p></a>
+    </div>
+    <div style="padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 10%;
+    background-color: rgba(224, 224, 224, 0.22);
+    margin-top: -20px;
+    padding-bottom: 10%;">
+        <h2>Ordine confermato</h2>
+        <p>Gentile cliente hai effettuato un ordine sul nostro sito.</p>
+        <p>Il tuo ordine è stato inserito nel nostro sistema e non verrà evaso fino a quando non ci risulterà pagato. L'ordine verrà eliminato se il pagamento non verrà effettuato entro 72 ore.</p>
+
+            <p>Il totale da pagare è {{ ordine.totale_da_pagare }} €.</p>
+
+            <b>Info pagamento</b>
+            {% if ordine.tipo_pagamento_id == 1 %}
+            <p>Hai scelto di pagare con PayPal. In questo modo il tuo ordine verrà evaso in tempi brevi.</p>
+            <p>Per pagare accedi al tuo account e vai alla voce Ordini, seleziona l'ordine da pagare e poi segui le istruzioni per il pagamento.</p>
+            {% elif ordine.tipo_pagamento_id == 2 %}
+            <p>Hai scelto di pagare tramite Bonifico bancario. Ecco i dati per il pagamento :</p>
+            <p>{{ ordine.pagamento.istruzioni }}</p>
+            {% elif ordine.tipo_pagamento_id == 3 %}
+            <p>Hai scelto di pagare tramite Postepay. Ecco i dati per il pagamento :</p>
+            <p>{{ ordine.pagamento.istruzioni }}</p>
+            {% endif %}
+            <b>Ecco un riepilogo del tuo ordine</b>
+            <table>
+                <thead>
+                <tr style="
+    text-align: center;
+"><th style="
+    width: 450px;
+    text-align: left;
+">Codice</th>
+                    <th style="
+    width: 50px;
+        text-align: right;
+">Qta</th>
+                    <th style="
+    width: 200px;
+        text-align: right;
+">Prezzo unitario</th>
+                </tr></thead>
+            <tbody>
+                {% for riga in ordine.righe_ordine %}
+                <tr>
+                    <td width="700px" style="text-align: left">{{ riga.prodotto.mpn }}</td>
+
+                    <td width="50px" style="    text-align: right;">{{ riga.qta }}</td>
+                    <td width="50px" style="    text-align: right;">{{ riga.prezzo_unitario }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            <p><b>Spedizione </b></p>
+            <p>Spese spedizione : {{ ordine.spese_spedizione }} € </p>
+            <p>Tempi di consegna : {{ ordine.corriere.delay }}</p>
+            <p><b>Indirizzo consegna: </b></p>
+            <p>{{ ordine.indirizzo_spedizione.nome }} {{ ordine.indirizzo_spedizione.cognome }} </br>
+            Via {{ ordine.indirizzo_spedizione.via }} {{ ordine.indirizzo_spedizione.n_civico }} {{ ordine.indirizzo_spedizione.citta.nome }} ({{ ordine.indirizzo_spedizione.citta.provincia }}) - {{ ordine.indirizzo_spedizione.cap }}
+            </br>{{ ordine.indirizzo_spedizione.n_cellulare }} - {{ ordine.indirizzo_spedizione.n_telefono }}
+            </p>
+
+            {% if ordine.fattura %}
+            <p><b>Indirizzo fatturazione: </b></p>
+            <p>{{ ordine.indirizzo_fatturazione.nome }} {{ ordine.indirizzo_fatturazione.cognome }} </br>
+            Via {{ ordine.indirizzo_fatturazione.via }} {{ ordine.indirizzo_fatturazione.n_civico }} {{ ordine.indirizzo_fatturazione.citta.nome }} ({{ ordine.indirizzo_fatturazione.citta.provincia }}) - {{ ordine.indirizzo_fatturazione.cap }}
+            </br>{{ ordine.indirizzo_fatturazione.n_cellulare }} - {{ ordine.indirizzo_fatturazione.n_telefono }}
+            {% endif %}
+    </div>
+    <div style="
+    width: 100%;
+    background-color: #e95420;
+    height: 45px;
+    color:white;
+    font-size: 9pt;
+    text-align: center;
+    margin-top: -20px;
+    "><p style="padding-top: 1%;">Servizio di email automatico , non rispondere a questa email. Per contattarci visita il nostro sito web : <a href="http://www.cartuccia24.com" style="color: white;text-decoration: none">www.cartuccia24.com</a></p></div>
+
+</div>
+</body>
+</html>

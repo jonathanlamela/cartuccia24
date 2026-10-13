@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+
+{% block title %}Completa ordine{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Completa le informazioni sull'ordine
+        </div>
+        <div class="panel-body">
+
+            <table class="table table-responsive">
+                <thead>
+                <th>Prodotto</th>
+                <th style="text-align: center">Qta</th>
+                <th style="text-align: center">Disponibilità</th>
+                <th style="text-align: center">Prezzo</th>
+                </thead>
+                <tbody>
+                {% for prodotto in carrello %}
+                    <tr>
+                        <td><a href="/prodotto/{{ prodotto.product.slug }}.html">{{ prodotto.product.nome }}</a></td>
+                        <td style="text-align: center">{{ prodotto.quantity }}</td>
+                        <td style="text-align: center">{{ prodotto.product.offerte.first.qta }}</td>
+                        <td style="text-align: center">{{ prodotto.unit_price }} €</td>
+
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>Totale prodotti (tasse incluse)</td>
+                    <td style="text-align: center">{{ carrello.count }}</td>
+                    <td></td>
+                    <td style="text-align: center">{{ carrello.summary }} €</td>
+                </tr>
+                <tr>
+                    <td>Spedizione</td>
+                    <td style="text-align: center"></td>
+                    <td></td>
+                    <td style="text-align: center" id="spese_spedizione">0,00 €</td>
+                </tr>
+                <tr>
+                    <td><b>Totale</b></td>
+                    <td style="text-align: center"></td>
+                    <td></td>
+                    <td style="text-align: center" id="totale">0,00 €</td>
+                </tr>
+                </tbody>
+            </table>
+
+
+
+
+
+
+            <form class="form form-horizontal" action="/ordine/completa/" method="POST">
+                {% csrf_token %}
+                <h4>Spedizione</h4>
+                <table class="table table-responsive">
+                    <thead>
+                    <th></th>
+                    <th>Corriere</th>
+                    <th>Tempi consegna</th>
+                    <th>Costo</th>
+                    </thead>
+                    <tbody>
+                    {% for corriere in corrieri %}
+                        <tr>
+                            <td><input type="radio" name="corriere" value="{{ corriere.corriere.id }}"/></td>
+                            <td class="col-md-9">{{ corriere.corriere.nome }}</td>
+                            <td class="col-md-2">{{ corriere.corriere.delay }}</td>
+                            <td class="col-md-2" id="price_{{ corriere.corriere.id }}">{{ corriere.costo }} €</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="control-group">
+                    <label><b>Indirizzo di spedizione</b></label>
+                    <select name="indirizzo_spedizione" class="form-control">
+                        {% for value,text in form.indirizzo_spedizione.field.choices %}
+                            <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ form.indirizzo_spedizione.errors }}
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="fattura" id="id_fattura"> Voglio la fattura
+                    </label>
+                    <script>
+                        $(document).ready(function(){
+                           $("#id_fattura").change(function(){
+                               if ($(this).is(":checked")){
+                                   $("#indirizzo_fatturazione_control").show();
+                               }else{
+                                   $("#indirizzo_fatturazione_control").hide();
+                               }
+                           })
+                        });
+                    </script>
+                </div>
+                <div class="control-group" id="indirizzo_fatturazione_control" style="display: none">
+                    <label><b>Indirizzo di fatturazione</b></label>
+                    <select name="indirizzo_fatturazione" class="form-control">
+                        {% for value,text in form.indirizzo_fatturazione.field.choices %}
+                            <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                    <p style="font-size: 8pt">Se non specificato verrà usato lo stesso indirizzo di spedizione</p>
+                </div>
+                <div class="control-group">
+                    <a href="/account/profilo/cambia/indirizzi/">Aggiungi/modifica indirizzo</a>
+                </div>
+                <div class="control-group">
+                    <label><b>Pagamento</b></label>
+                    <select name="pagamento" class="form-control">
+                        {% for value,text in form.pagamento.field.choices %}
+                            <option value="{{ value }}">{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ form.pagamento.errors }}
+                </div>
+                <div class="control-group">
+                    </br>
+                    <input type="submit" value="CONFERMA ORDINE" class="col-md-2 btn btn-success"/>
+                </div>
+
+                <script>
+
+                    var corrieri = new Array();
+                    var corriere = -1;
+                    var totale_prodotti = 0.00;
+
+
+                    $("input[name='corriere']").click(function () {
+                        corriere = $("input[name='corriere']:checked").val();
+                        calcolaSpese();
+                    });
+
+                    $(document).ready(function () {
+                        var str = "{{ carrello.summary }}";
+                        str = str.replace(",",".");
+                        totale_prodotti = parseFloat(str);
+
+
+                        {% for corriere in corrieri %}
+                            str = "{{corriere.costo}}"
+                            str = str.replace(",",".");
+                            corrieri[{{ corriere.corriere.id}}] = parseFloat(str);
+                        {% endfor %}
+
+                        document.getElementsByName("corriere")[0].checked = true;
+
+                        corriere = document.getElementsByName("corriere")[0].value;
+
+                        calcolaSpese();
+
+                    });
+
+                    function calcolaSpese(){
+                        var spese_spedizione = 0.00;
+
+                        spese_spedizione = corrieri[$("input[name='corriere']:checked").val()]
+
+
+                        var str_totale = ""+parseFloat(totale_prodotti + spese_spedizione).toFixed(2);
+                        var str_spese_spedizione = ""+parseFloat(spese_spedizione).toFixed(2);
+
+                        str_spese_spedizione = str_spese_spedizione.replace(".",",");
+                        str_totale = str_totale.replace(".",",");
+
+                        $("#spese_spedizione").text(str_spese_spedizione + " €");
+                        $("#totale").text(str_totale + " €");
+                    }
+                </script>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

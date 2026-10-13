@@ -1,0 +1,115 @@
+<form class="form-horizontal" action="/st/" method="POST">
+                    {% csrf_token %}
+                    <style>
+                        .select2 .select2-container .select2-container--default{
+                            width: 100%;
+                        }
+                    </style>
+                    <div class="control-group">
+                        <label for="marca">Seleziona una marca</label>
+                        <select name="marca" class="form-control" id="select_marca">
+                            {% for marca in marche %}
+                                <option value="{{ marca.id }}">{{ marca.nome }}</option>
+                            {% endfor %}
+                        </select>
+                        <script>
+                            $(document).ready(function(){
+                                $("#select_marca").select2();
+                                $(".select2 ").css("width","100%");
+                                $("#select_marca").change(function(){
+
+                                    $("#cerca-serie").hide();
+                                    $("#modello").hide();
+                                    $("#cerca").hide();
+
+                                    $.ajax("/get-series/",{
+                                        data:{"q":$("#select_marca").val()},
+                                        success:function(data){
+                                            results = data.results;
+                                            $("select[name='serie']").empty();
+                                            if (results.length > 0){
+                                                for (var i = 0;i < results.length;i++){
+                                                    var serie = results[i];
+                                                    $("select[name='serie']").append("<option value='"+serie.id+"'>"+serie.text+"</option>")
+                                                }
+                                                $("select[name='serie']").prepend("<option value='0'>-- Tutte --</option>");
+                                                $("select[name='serie']").select2();
+                                                $(".select2-container").css("width","100%");
+
+                                                $("#cerca-serie").show();
+                                            } else {
+                                                $("#cerca-serie").hide();
+
+                                                $.ajax("/get-printers/",{
+                                        data:{
+                                            "marca":$("select[name='marca']").val(),
+                                            "serie":"0"
+                                        },
+                                        success:function(data){
+                                            $("select[name='modello']").empty();
+                                            results = data;
+                                            if (results.length > 0){
+                                                for (var i = 0;i < results.length;i++){
+                                                    var modello = results[i];
+                                                    $("select[name='modello']").append("<option value='"+modello.id+"'>"+modello.nome+"</option>")
+                                                }
+                                                $("select[name='modello']").select2();
+                                                $(".select2-container").css("width","100%");
+                                                $("#modello").show();
+                                                $("#cerca").show();
+                                            } else {
+                                                $("#modello").hide();
+                                                $("#cerca").hide();
+                                            }
+                                        }
+                                    })
+
+                                                $("#modello").show();
+                                                $("#cerca").show();
+                                            }
+                                        }
+                                    })
+                                });
+                                $("select[name='serie']").change(function(){
+                                    $("#modello").hide();
+                                    $("#cerca").hide();
+                                    $.ajax("/get-printers/",{
+                                        data:{
+                                            "serie":$("select[name='serie']").val(),
+                                            "marca":$("select[name='marca']").val()
+                                        },
+                                        success:function(data){
+                                            $("select[name='modello']").empty();
+                                            results = data;
+                                            if (results.length > 0){
+                                                for (var i = 0;i < results.length;i++){
+                                                    var modello = results[i];
+                                                    $("select[name='modello']").append("<option value='"+modello.id+"'>"+modello.nome+"</option>")
+                                                }
+                                                $("select[name='modello']").select2();
+                                                $(".select2-container").css("width","100%");
+                                                $("#modello").show();
+                                                $("#cerca").show();
+                                            } else {
+                                                $("#modello").hide();
+                                                $("#cerca").hide();
+                                            }
+                                        }
+                                    })
+                                });
+                            });
+                        </script>
+                    </div>
+
+                    <div class="control-group" id="cerca-serie" style="display:none">
+                        <label for="serie">Seleziona la serie</label>
+                        <select name="serie" class="form-control"></select>
+                    </div>
+                    <div class="control-group" id="modello" style="display: none">
+                        <label for="modello">Seleziona un modello</label>
+                        <select name="modello" class="form-control"></select>
+                    </div>
+                    <div class="control-group" style="padding-top: 5px;display: none" id="cerca">
+                        <input type="submit" class="btn btn-success" value="Cerca">
+                    </div>
+                </form>

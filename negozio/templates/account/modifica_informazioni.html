@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}Modifica informazioni{% endblock %}
+
+{% block head %}
+    <link href="/static/autocomplete_light/vendor/select2/dist/css/select2.css" type="text/css" media="all" rel="stylesheet">
+    <link href="/static/autocomplete_light/select2.css" type="text/css" media="all" rel="stylesheet">
+    <script type="text/javascript" src="/static/autocomplete_light/jquery.init.js"></script>
+    <script type="text/javascript" src="/static/autocomplete_light/autocomplete.init.js"></script>
+    <script type="text/javascript" src="/static/autocomplete_light/vendor/select2/dist/js/select2.full.js"></script>
+    <script type="text/javascript" src="/static/autocomplete_light/select2.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% if msg %}
+    <div class="alert alert-success">
+        {{ msg }}
+    </div>
+    {% endif %}
+
+    <form class="form form-horizontal col-md-4" method="post" action="/account/profilo/cambia/informazioni/">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Nome</label>
+            <input type="text"  name="{{ form.first_name.name }}" class="form-control" value="{{ form.first_name.value }}">
+        </div>
+
+        <div class="form-group">
+            <label>Cognome</label>
+            <input type="text" name="{{ form.last_name.name }}" class="form-control" value="{{ form.last_name.value }}">
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="text" name="{{ form.email.name }}" class="form-control" value="{{ form.email.value }}">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-success" value="Modifica informazioni">
+        </div>
+
+    </form>
+    {{ form.media }}
+{% endblock %}

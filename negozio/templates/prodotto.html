@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ product.nome }}{% endblock %}{
+
+{% block content %}
+
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ product.nome }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-4" style="text-align: center">
+                {% if product.url_image|length > 0 %}
+                    <img src="{{ product.url_image }}" width="100%" height="auto"  />
+                {% else %}
+                    <img src="/images/{{ product.mpn }}" width="100%" height="auto" />
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <form action="/carrello/aggiungi/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="prodotto" value="{{ product.id }}">
+                    <table class="table">
+                        <thead>
+                        Informazioni base
+                        </thead>
+                        <tr>
+                            <td><b>MPN</b></td>
+                            <td>{{ product.mpn }}</td>
+                        </tr>
+                        {% if product.ean %}
+                            <tr>
+                                <td><b>EAN</b></td>
+                                <td>{{ product.ean }}</td>
+                            </tr>                            
+                        {% endif %}
+                        <tr>
+                        <td><b>Marca</b></td>
+                        {% if product.marca.url_immagine != "" %}
+                            <td><a href="/serie/{{ product.marca.id }}"><img src="/assets/manufacturer/{{ product.marca.image_name }}" alt="{{ product.marca.nome }}" width="100px" height="auto"/></a></td>
+                        {% else %}
+                            <td><a href="/serie/{{ product.marca.id }}">{{ product.marca.nome }}</a></td>
+                        {% endif %}
+                    </tr>
+                        {% if product.offerte.first and product.offerte.first.qta > 0 %}
+                            <tr>
+                                <td><h4><b>Prezzo</b></h4></td>
+                                <td><h4>{{ product.offerte.first.prezzo_ivato }} € </h4></td>
+                            </tr>
+                            <tr>
+                                <td><b>Quantità</b></td>
+                                <td><input type="number" id="qta" name="qta" class="form-control" value="1" min="1" max="{{ product.offerte.first.qta }}"/><p>{{ product.offerte.first.qta }} in stock</p></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="submit" value="Aggiungi al carrello" class="btn btn-success"></td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </form>
+                <script>$("[type='number']").keypress(function (evt) {
+                    evt.preventDefault();
+                    $("input[name='qta']").val(1);
+                });</script>
+
+            </div>
+        </div>
+    </div>
+
+    {% if product.descrizione_breve %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Descrizione breve</h3>
+            </div>
+            <div class="panel-body">
+                {{ product.descrizione_breve }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if product.descrizione_lunga %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Descrizione completa</h3>
+            </div>
+            <div class="panel-body">
+                {{ product.descrizione_lunga|cut:"\n"|safe }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if modelli.all|length > 0 %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Stampanti che usano questo prodotto</h3>
+            </div>
+            <div class="panel-body">
+             <div class="col-md-12" style="text-align: center;padding-bottom: 2%;">
+                {% for modello in modelli.all %}
+                    <div class="col-md-3">
+                          <a href="/stampante/{{ modello.slug }}.html"><h4>{{ modello.nome }}</h4></a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+
+    </div>
+{% endblock %}

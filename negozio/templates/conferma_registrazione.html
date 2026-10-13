@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+
+{% block title %}Registrazione al sito{% endblock %}
+
+{% block content %}
+   <p>Grazie per esserti registrato ti abbiamo inviato un email su {{ email }} con un link di conferma per attivare il tuo account.</p>
+    <p>Se non ricevi la mail clicca <a href="/registrazione/email/{{ id }}">qui</a></p>
+{% endblock %}

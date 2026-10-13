@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}I miei ordini{% endblock %}
+
+{% block content %}
+
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="/account/profilo/">Profilo</a></li>
+        <li role="presentation"><a href="/account/stampanti/">Stampanti preferite</a></li>
+        <li role="presentation" class="active"><a href="/account/ordini/">Ordini</a></li>
+    </ul>
+
+    <div class="tab-content" class="tab-pane active">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                I tuoi ordini
+            </div>
+            <div class="panel-body">
+                <table class="table table-responsive">
+                    <thead>
+                        <th>Data ordine</th>
+                        <th>Codice ordine</th>
+                        <th>Totale (€)</th>
+                        <th>Stato</th>
+                    </thead>
+                    <tbody>
+                        {% for ordine in ordini %}
+                        <tr>
+                            <td>{{ ordine.data }}</td>
+                            <td><a href="/ordine/conferma/{{ ordine.id }}/">{{ ordine.codice }}</a></td>
+                            <td>{{ ordine.totale_da_pagare }} €</td>
+                            <td>{{ ordine.stato }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

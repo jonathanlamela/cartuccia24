@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}Le mie stampanti{% endblock %}
+
+{% block content %}
+
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="/account/profilo/">Profilo</a></li>
+        <li role="presentation" class="active"><a href="/account/stampanti/">Stampanti preferite</a></li>
+        <li role="presentation"><a href="/account/ordini/">Ordini</a></li>
+    </ul>
+
+    <div class="tab-content" class="tab-pane active">
+        <h2>Le mie stampanti</h2>
+        <p>Da qui puoi gestire quali sono le tue stampanti preferite in modo da ricevere sempre le ultime offerte sui consumabili via email. Non rimanere sfornito di cartucce o toner !</p>
+        <table class="table table-responsive">
+            <thead>
+                <th>Stampante</th>
+                <th>Consumabili</th>
+                <th>Azioni</th>
+            </thead>
+            <tbody>
+                {% for stampante in stampanti %}
+                <tr>
+                   <td><a href="/stampante/{{ stampante.slug }}.html">{{ stampante.nome }}</a></td>
+                   <td>
+                       {% for prodotto in stampante.prodotti_associati.all %}
+                           <a href="/prodotto/{{ prodotto.slug }}.html">{{ prodotto.mpn }} {% if prodotto.offerte.all|length > 0 %}<b> {{ prodotto.offerte.first.prezzo }} € </b>{% endif %}</a> /
+                       {% endfor %}
+                   </td>
+                    <td>
+                        <a href="/account/stampanti/elimina/{{ stampante.id }}">Elimina dai preferiti</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
